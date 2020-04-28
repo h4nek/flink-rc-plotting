@@ -61,19 +61,29 @@ y = []
 plt.xlabel(x_label)
 plt.ylabel(y_label)
 
+if title.endswith("LR"):
+    if plot_type == "-":
+        predictionsLabel = "linear predictor function"
+    else:
+        predictionsLabel = "LR fit"
+else:
+    if plot_type == "-":
+        predictionsLabel = "predictor function"
+    else:
+        predictionsLabel = "RC fit"
+
 x = getPlottingData(inputs_file_name, input_index)
 y = getPlottingData(outputs_file_name, 1)
 plt.plot(x, y, ".", label="real data")
 if predictions_file_name != "/":
     y = getPlottingData(predictions_file_name, 1)
-    plt.plot([i+shift_data for i in x], y, plot_type, label="linear predictor function (online)" if plot_type == "-" else "LR fit (online)")
+    plt.plot([i+shift_data for i in x], y, plot_type, label=predictionsLabel + " (online)")
 plt.title(title)
 
 # adding offline predictions
 if len(sys.argv) > 11:
     y = getPlottingData(predictions_offline_file_name, 1)
-    plt.plot([i+shift_data for i in x], y, plot_type, label="linear predictor function (offline)" if plot_type == "-" else
-        "LR fit (offline)")
+    plt.plot([i+shift_data for i in x], y, plot_type, label=predictionsLabel + " (offline)")
 
 plt.legend()
 plotsPath = "../python_plots/plots/"
