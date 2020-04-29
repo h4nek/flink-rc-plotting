@@ -37,7 +37,7 @@ x_label = "x"
 y_label = "y"
 title = "Linear Regression Test"
 plot_type = "-"
-predictions_file_name = ""
+predictions_offline_file_name = ""
 
 # print("args num.: " + len(sys.argv).__str__())
 # print(sys.argv)
@@ -81,7 +81,7 @@ if predictions_file_name != "/":
 plt.title(title)
 
 # adding offline predictions
-if len(sys.argv) > 11:
+if len(sys.argv) > 11 and predictions_offline_file_name != "/":
     y = getPlottingData(predictions_offline_file_name, 1)
     plt.plot([i+shift_data for i in x], y, plot_type, label=predictionsLabel + " (offline)")
 
