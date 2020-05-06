@@ -20,6 +20,8 @@ def getPlottingData(file_name, column_index):
     with open('../python_plots/plot_data/' + file_name + ".csv") as csvfile:
         file = csv.reader(csvfile)
         for row in file:
+            if len(row) <= column_index:    # the column is either not present or corrupt
+                return []
             try:
                 axis.append(float(row[column_index]))
             except ValueError:  # skip invalid lines
@@ -29,31 +31,24 @@ def getPlottingData(file_name, column_index):
 
 inputs_file_name = "test"
 outputs_file_name = "test"
-predictions_file_name = "test"
 output_image_name = "testLRFit"
 input_index = 1
-shift_data = 0
 x_label = "x"
 y_label = "y"
 title = "Linear Regression Test"
 plot_type = "-"
-predictions_offline_file_name = ""
 
 # print("args num.: " + len(sys.argv).__str__())
 # print(sys.argv)
 if len(sys.argv) > 1:
     inputs_file_name = sys.argv[1]
     outputs_file_name = sys.argv[2]
-    predictions_file_name = sys.argv[3]
-    output_image_name = sys.argv[4]
-    input_index = int(sys.argv[5])
-    shift_data = int(sys.argv[6])
-    x_label = sys.argv[7]
-    y_label = sys.argv[8]
-    title = sys.argv[9]
-    plot_type = sys.argv[10]
-if len(sys.argv) > 11:
-    predictions_offline_file_name = sys.argv[11]
+    output_image_name = sys.argv[3]
+    input_index = int(sys.argv[4])
+    x_label = sys.argv[5]
+    y_label = sys.argv[6]
+    title = sys.argv[7]
+    plot_type = sys.argv[8]
 
 x = []
 y = []
@@ -75,16 +70,16 @@ else:
 x = getPlottingData(inputs_file_name, input_index)
 y = getPlottingData(outputs_file_name, 1)
 plt.plot(x, y, ".", label="real data")
-if predictions_file_name != "/":
-    y = getPlottingData(predictions_file_name, 1)
-    plt.plot([i+shift_data for i in x], y, plot_type, label=predictionsLabel + " (online)")
+
+y = getPlottingData(outputs_file_name, 2)
+if y:   # online predictions
+    plt.plot(x, y, plot_type, label=predictionsLabel + " (online)")
+
+y = getPlottingData(outputs_file_name, 3)
+if y:   # offline predictions
+    plt.plot(x, y, plot_type, label=predictionsLabel + " (offline)")
+
 plt.title(title)
-
-# adding offline predictions
-if len(sys.argv) > 11 and predictions_offline_file_name != "/":
-    y = getPlottingData(predictions_offline_file_name, 1)
-    plt.plot([i+shift_data for i in x], y, plot_type, label=predictionsLabel + " (offline)")
-
 plt.legend()
 plotsPath = "../python_plots/plots/"
 plt.savefig(plotsPath + output_image_name + ".pdf")
