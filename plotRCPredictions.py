@@ -50,9 +50,6 @@ if len(sys.argv) > 1:
     title = sys.argv[7]
     plot_type = sys.argv[8]
 
-x = []
-y = []
-
 plt.xlabel(x_label)
 plt.ylabel(y_label)
 
