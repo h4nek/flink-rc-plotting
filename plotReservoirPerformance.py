@@ -1,4 +1,6 @@
 import os
+import textwrap
+
 import matplotlib.pyplot as plt
 import csv
 import numpy as np
@@ -13,19 +15,20 @@ plt.rcParams.update({
     "text.usetex": True,  # LaTeX style of text (math with $$) formatting,
     "pgf.rcfonts": False,
     "pgf.texsystem": "pdflatex",
+    'figure.autolayout': True,
 })
 
 
-input_file_name = "Analyzing spectral radius using Mackey-Glass Time Series"  # test
+input_file_name = "Analyzing topology using Mackey-Glass Time Series"  # test
 output_image_name = "testReservoirPerformance"
 folder = "hyperparameter_performance/"
-x_label = "$N_{\\mathrm{x}}$"
-y_label = "$\\rho$"
+x_label = "Topology"
+y_label = "MSE"
 title = "Reservoir Performance Plot Test"
 plot_type = "-"
-n_values_per_measurement = 4
+n_values_per_measurement = 5
 n_measurements = 1
-is_x_numeric = True
+is_x_numeric = False
 
 if len(sys.argv) > 1:
     input_file_name = sys.argv[1]
@@ -50,15 +53,17 @@ data = np.array(list(data))
 plt.xlabel(x_label)
 plt.ylabel(y_label)
 
+if not is_x_numeric:
+    plt.xticks(rotation=90)
+
 for i in range(n_measurements):
     start = i*n_values_per_measurement
     stop = start + n_values_per_measurement
     measurement_data = data[start:stop]
-    x = [float(x) if is_x_numeric else x for (x,y) in measurement_data]
+    x = [float(x) if is_x_numeric else textwrap.fill(x, 10) for (x,y) in measurement_data]
     y = [float(y) for (x,y) in measurement_data]
     plt.plot(x, y, plot_type)
 
 plt.title(title)
 plotsPath = "../python_plots/plots/" + folder
 plt.savefig(plotsPath + output_image_name + ".pdf")
-# plt.show()  # blank when using pgf
