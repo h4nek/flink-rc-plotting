@@ -27,12 +27,12 @@ y_label = "MSE"
 title = "Reservoir Performance Plot Test"
 plot_type = "-"
 n_values_per_measurement = 5
-n_measurements = 1
+n_measurements = 10
 is_x_numeric = False
 
 if len(sys.argv) > 1:
     input_file_name = sys.argv[1]
-    output_image_name = sys.argv[2]  # same as title
+    output_image_name = sys.argv[1]  # same as input file name
     title = sys.argv[2]
     folder = sys.argv[3]
 if len(sys.argv) > 4:
